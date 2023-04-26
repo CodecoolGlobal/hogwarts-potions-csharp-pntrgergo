@@ -38,4 +38,5 @@ namespace HogwartsPotions.Data
             Room room5 = new Room(5);
             HashSet<Room> rooms = new HashSet<Room>() { room1, room2, room3, room4, room5 };
         }
+    }
 }
