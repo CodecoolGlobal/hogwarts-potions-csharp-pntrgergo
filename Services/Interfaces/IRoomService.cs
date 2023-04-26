@@ -7,7 +7,7 @@ namespace HogwartsPotions.Services.Interfaces;
 public interface IRoomService
 {
 
-    Task AddRoomToDb(Room room);
+    Task AddRoom(Room room);
     Task<List<Room>> GetAllRooms();
     Task<Room> GetRoomById(long roomId);
     Task<List<Room>> GetRoomsForRatOwners();

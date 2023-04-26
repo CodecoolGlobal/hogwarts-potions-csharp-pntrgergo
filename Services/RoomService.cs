@@ -1,40 +1,54 @@
 ﻿using HogwartsPotions.Models.Entities;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using HogwartsPotions.Services.Interfaces;
+using HogwartsPotions.Data;
+using HogwartsPotions.Models.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace HogwartsPotions.Services
 {
     public class RoomService : IRoomService
     {
-        public Task AddRoom(Room room)
+        private readonly HogwartsContext _context;
+
+        public RoomService(HogwartsContext context)
         {
-            throw new System.NotImplementedException();
+            _context = context;
         }
 
-        public Task DeleteRoom(Room room)
+        public async Task AddRoom(Room room)
         {
-            throw new System.NotImplementedException();
+            await _context.Rooms.AddAsync(room);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<List<Room>> GetAllRooms()
+        public async Task DeleteRoom(Room room)
         {
-            throw new System.NotImplementedException();
+            _context.Rooms.Remove(room);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<Room> GetRoom(long roomId)
+        public async Task<List<Room>> GetAllRooms()
         {
-            throw new System.NotImplementedException();
+            return await _context.Rooms.ToListAsync();
         }
 
-        public Task<List<Room>> GetRoomsForRatOwners()
+        public async Task<Room> GetRoomById(long roomId)
         {
-            throw new System.NotImplementedException();
+            return await _context.Rooms.Where(r => r.Id == roomId).FirstOrDefaultAsync();
         }
 
-        public Task UpdateRoom(Room room)
+        public async Task<List<Room>> GetRoomsForRatOwners()
         {
-            throw new System.NotImplementedException();
+            return await _context.Rooms.Where(r => r.Residents.All(res => res.PetType == PetType.Rat)).ToListAsync();
+        }
+
+        public async Task UpdateRoomById(Room room)
+        {
+            _context.Rooms.Update(room);
+            await _context.SaveChangesAsync();
         }
     }
 }
