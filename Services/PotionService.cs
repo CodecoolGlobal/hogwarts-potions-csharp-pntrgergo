@@ -59,32 +59,35 @@ namespace HogwartsPotions.Services
             await _context.SaveChangesAsync(); ;
         }
 
-        public Task<List<Potion>> GetAllPotions()
+        public async Task<List<Potion>> GetAllPotions()
         {
-            throw new System.NotImplementedException();
+            return await _context.Potions.ToListAsync();
         }
 
-        public Task<int> GetNumberOfPotionsByStudent(Student student)
+        public async Task<int> GetNumberOfPotionsByStudent(Student student)
         {
-            throw new System.NotImplementedException();
+            return await _context.Potions.CountAsync(p => p.Student == student);
         }
 
-        public Task<Potion> GetPotionById(long potionId)
+        public async Task<Potion> GetPotionById(long potionId)
         {
-            throw new System.NotImplementedException();
+            return await _context.Potions.FirstOrDefaultAsync(p => p.Id == potionId);
         }
 
-        public Task<List<Potion>> GetStudentPotions(long studentId)
+        public async Task<List<Potion>> GetStudentPotions(long studentId)
         {
-            throw new System.NotImplementedException();
+            return await _context.Potions.Where(p => p.Student.Id == studentId).ToListAsync();
         }
 
-        public Task<Potion> MakeNewPotion(Student student)
+        public async Task<Potion> MakeNewPotion(Student student)
         {
-            throw new System.NotImplementedException();
+            Potion potion = new Potion(
+                name: $"{student.Name}'s discovery",
+                student: student,
+                brewingStatus: BrewingStatus.Brew,
+                    recipe: null);
+            return await AddPotion(potion);
         }
-
-        //
 
         private async Task<Ingredient> FetchIngredient(Ingredient studentsIngredient)
         {
