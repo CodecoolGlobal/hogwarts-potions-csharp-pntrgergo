@@ -1,30 +1,34 @@
-﻿using HogwartsPotions.Models.Entities;
+﻿using HogwartsPotions.Data;
+using HogwartsPotions.Models.Entities;
 using HogwartsPotions.Services.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace HogwartsPotions.Services
 {
     public class RecipeService : IRecipeService
     {
-        public Task AddRecipeToDb(Recipe recipe)
+        private readonly HogwartsContext _context;
+
+        public RecipeService(HogwartsContext context)
         {
-            throw new System.NotImplementedException();
+            _context = context;
+        }
+        public async Task AddRecipe(Recipe recipe)
+        { 
+            await _context.Recipes.AddAsync(recipe);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<List<Recipe>> GetAllRecipes()
+        public async Task<List<Recipe>> GetAllRecipes()
         {
-            throw new System.NotImplementedException();
+            return await _context.Recipes.ToListAsync();
         }
 
-        public Task<int> GetNumberOfRecipesByStudent(Student student)
+        public async Task<int> GetNumberOfRecipesByStudent(Student student)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<Recipe> GetRecipeByIngredients(HashSet<Ingredient> ingredients)
-        {
-            throw new System.NotImplementedException();
+            return await _context.Recipes.CountAsync(r => r.Student == student);
         }
     }
 }
